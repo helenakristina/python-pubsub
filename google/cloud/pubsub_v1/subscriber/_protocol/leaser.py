@@ -96,10 +96,9 @@ class Leaser(object):
         """
         with self._add_remove_lock:
             for ack_id in ack_ids:
-                lease_info = self._leased_messages.get(ack_id)
                 # Lease info might not exist for this ack_id because it has already
                 # been removed by remove().
-                if lease_info:
+                if lease_info := self._leased_messages.get(ack_id):
                     self._leased_messages[ack_id] = lease_info._replace(
                         sent_time=time.time()
                     )
@@ -142,13 +141,12 @@ class Leaser(object):
             # that in the event of a badly behaving actor, we can drop messages
             # and allow the Pub/Sub server to resend them.
             cutoff = time.time() - self._manager.flow_control.max_lease_duration
-            to_drop = [
+
+            if to_drop := [
                 requests.DropRequest(ack_id, item.size, item.ordering_key)
                 for ack_id, item in six.iteritems(leased_messages)
                 if item.sent_time < cutoff
-            ]
-
-            if to_drop:
+            ]:
                 _LOGGER.warning(
                     "Dropping %s items because they were leased too long.", len(to_drop)
                 )
@@ -163,8 +161,7 @@ class Leaser(object):
             # Create a streaming pull request.
             # We do not actually call `modify_ack_deadline` over and over
             # because it is more efficient to make a single request.
-            ack_ids = leased_messages.keys()
-            if ack_ids:
+            if ack_ids := leased_messages.keys():
                 _LOGGER.debug("Renewing lease for %d ack IDs.", len(ack_ids))
 
                 # NOTE: This may not work as expected if ``consumer.active``

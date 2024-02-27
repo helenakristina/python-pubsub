@@ -116,8 +116,7 @@ class MessagesOnHold(object):
             assert (
                 self._pending_ordered_messages.get(key) is not None
             ), "A message queue should exist for every ordered message in flight."
-            next_msg = self._get_next_for_ordering_key(key)
-            if next_msg:
+            if next_msg := self._get_next_for_ordering_key(key):
                 # Schedule the next message because the previous was dropped.
                 # Note that this may overload the user's `max_bytes` limit, but
                 # not their `max_messages` limit.
@@ -139,8 +138,7 @@ class MessagesOnHold(object):
             google.cloud.pubsub_v1.subscriber.message.Message|None: The
                 next message for this ordering key or None if there aren't any.
         """
-        queue_for_key = self._pending_ordered_messages.get(ordering_key)
-        if queue_for_key:
+        if queue_for_key := self._pending_ordered_messages.get(ordering_key):
             self._size = self._size - 1
             return queue_for_key.popleft()
         return None

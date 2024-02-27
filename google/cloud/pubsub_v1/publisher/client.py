@@ -218,8 +218,7 @@ class Client(object):
             ordering_key) pair.
         """
         sequencer_key = (topic, ordering_key)
-        sequencer = self._sequencers.get(sequencer_key)
-        if sequencer is None:
+        if (sequencer := self._sequencers.get(sequencer_key)) is None:
             if ordering_key == "":
                 sequencer = unordered_sequencer.UnorderedSequencer(self, topic)
             else:
@@ -257,8 +256,7 @@ class Client(object):
                 )
 
             sequencer_key = (topic, ordering_key)
-            sequencer = self._sequencers.get(sequencer_key)
-            if sequencer is None:
+            if (sequencer := self._sequencers.get(sequencer_key)) is None:
                 _LOGGER.debug(
                     "Error: The topic/ordering key combination has not "
                     "been seen before."

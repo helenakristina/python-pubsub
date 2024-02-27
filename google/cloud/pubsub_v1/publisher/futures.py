@@ -46,7 +46,6 @@ class Future(futures.Future):
         # Attempt to get the exception if there is one.
         # If there is not one, then we know everything worked, and we can
         # return an appropriate value.
-        err = self.exception(timeout=timeout)
-        if err is None:
+        if (err := self.exception(timeout=timeout)) is None:
             return self._result
         raise err

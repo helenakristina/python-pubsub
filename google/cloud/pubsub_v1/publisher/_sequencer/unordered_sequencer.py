@@ -126,9 +126,8 @@ class UnorderedSequencer(base.Sequencer):
         future = None
         while future is None:
             # Might throw MessageTooLargeError
-            future = batch.publish(message)
             # batch is full, triggering commit_when_full
-            if future is None:
+            if (future := batch.publish(message)) is None:
                 batch = self._create_batch(commit_retry=retry)
                 # At this point, we lose track of the old batch, but we don't
                 # care since it's already committed (because it was full.)

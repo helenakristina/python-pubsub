@@ -130,8 +130,7 @@ class Dispatcher(object):
         """
         # If we got timing information, add it to the histogram.
         for item in items:
-            time_to_ack = item.time_to_ack
-            if time_to_ack is not None:
+            if (time_to_ack := item.time_to_ack) is not None:
                 self._manager.ack_histogram.add(time_to_ack)
 
         # We must potentially split the request into multiple smaller requests

@@ -245,9 +245,8 @@ class FlowController(object):
         Returns:
             bool
         """
-        reservation = self._byte_reservations.get(threading.current_thread())
 
-        if reservation:
+        if reservation := self._byte_reservations.get(threading.current_thread()):
             enough_reserved = reservation.reserved >= reservation.needed
         else:
             enough_reserved = False
