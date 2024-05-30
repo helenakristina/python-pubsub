@@ -14,8 +14,6 @@
 
 """Base class for concurrency policy."""
 
-from __future__ import absolute_import, division
-
 import collections
 
 # Namedtuples for management requests. Used by the Message class to communicate
