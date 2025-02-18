@@ -22,6 +22,7 @@ at https://cloud.google.com/pubsub/docs.
 """
 
 import argparse
+import secrets
 
 
 def list_subscriptions_in_topic(project_id, topic_id):
@@ -524,7 +525,6 @@ def synchronous_pull_with_lease_management(project_id, subscription_id):
     # [START pubsub_subscriber_sync_pull_with_lease]
     import logging
     import multiprocessing
-    import random
     import time
 
     from google.cloud import pubsub_v1
@@ -551,7 +551,7 @@ def synchronous_pull_with_lease_management(project_id, subscription_id):
 
     def worker(msg):
         """Simulates a long-running process."""
-        RUN_TIME = random.randint(1, 60)
+        RUN_TIME = secrets.SystemRandom().randint(1, 60)
         logger.info(
             "{}: Running {} for {}s".format(
                 time.strftime("%X", time.gmtime()), msg.message.data, RUN_TIME
