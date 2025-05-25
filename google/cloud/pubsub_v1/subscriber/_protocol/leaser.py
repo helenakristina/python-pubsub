@@ -17,13 +17,13 @@ from __future__ import absolute_import
 import collections
 import copy
 import logging
-import random
 import threading
 import time
 
 import six
 
 from google.cloud.pubsub_v1.subscriber._protocol import requests
+import secrets
 
 
 _LOGGER = logging.getLogger(__name__)
@@ -182,7 +182,7 @@ class Leaser(object):
             # period between 0 seconds and 90% of the lease. This use of
             # jitter (http://bit.ly/2s2ekL7) helps decrease contention in cases
             # where there are many clients.
-            snooze = random.uniform(0.0, deadline * 0.9)
+            snooze = secrets.SystemRandom().uniform(0.0, deadline * 0.9)
             _LOGGER.debug("Snoozing lease management for %f seconds.", snooze)
             self._stop_event.wait(timeout=snooze)
 
